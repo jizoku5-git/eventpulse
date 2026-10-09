@@ -148,6 +148,13 @@ class EventPulseApp {
     this.toastNotification = document.getElementById('toastNotification');
     this.toastMessage = document.getElementById('toastMessage');
 
+    // ドロワー（スマホ用設定開閉）
+    this.sidebarPanel = document.getElementById('sidebarPanel');
+    this.btnToggleSettings = document.getElementById('btnToggleSettings');
+    this.btnMobileOpenSettings = document.getElementById('btnMobileOpenSettings');
+    this.btnCloseSidebar = document.getElementById('btnCloseSidebar');
+    this.mobileActiveTopicSummary = document.getElementById('mobileActiveTopicSummary');
+
     // 初期UI状態の適用
     this.toggleEmail.checked = this.settings.emailEnabled;
     this.inputEmailAddress.value = this.settings.emailAddress;
@@ -164,6 +171,17 @@ class EventPulseApp {
 
   // --- イベントリスナー設定 ---
   initEventListeners() {
+    // スマホ用ドロワー開閉
+    if (this.btnToggleSettings) {
+      this.btnToggleSettings.addEventListener('click', () => this.toggleSidebarDrawer());
+    }
+    if (this.btnMobileOpenSettings) {
+      this.btnMobileOpenSettings.addEventListener('click', () => this.openSidebarDrawer());
+    }
+    if (this.btnCloseSidebar) {
+      this.btnCloseSidebar.addEventListener('click', () => this.closeSidebarDrawer());
+    }
+
     // トピック追加
     this.addTopicForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -260,6 +278,40 @@ class EventPulseApp {
       if (e.target === this.eventDetailModal) this.closeEventModal();
       if (e.target === this.emailPreviewModal) this.closeEmailPreviewModal();
     });
+  }
+
+  // --- スマホ用ドロワー操作 ---
+  toggleSidebarDrawer() {
+    if (this.sidebarPanel.classList.contains('drawer-open')) {
+      this.closeSidebarDrawer();
+    } else {
+      this.openSidebarDrawer();
+    }
+  }
+
+  openSidebarDrawer() {
+    if (this.sidebarPanel) {
+      this.sidebarPanel.classList.add('drawer-open');
+      document.body.style.overflow = 'hidden'; // 背面スクロール抑止
+    }
+  }
+
+  closeSidebarDrawer() {
+    if (this.sidebarPanel) {
+      this.sidebarPanel.classList.remove('drawer-open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  updateMobileTopicSummary() {
+    if (!this.mobileActiveTopicSummary) return;
+    if (this.activeTopicFilter === 'ALL') {
+      const activeCount = this.topics.filter(t => t.enabled !== false).length;
+      this.mobileActiveTopicSummary.textContent = `全トピック (${activeCount}件有効)`;
+    } else {
+      const topic = this.topics.find(t => t.id === this.activeTopicFilter);
+      this.mobileActiveTopicSummary.textContent = topic ? topic.name : '絞り込み中';
+    }
   }
 
   updateSourceChipsUI() {
@@ -462,6 +514,7 @@ class EventPulseApp {
     this.renderTopicFilterSelect();
     const activeCount = this.topics.filter(t => t.enabled !== false).length;
     this.topicCountBadge.textContent = `有効: ${activeCount} / 全${this.topics.length}件`;
+    this.updateMobileTopicSummary();
   }
 
   renderTopicTags() {

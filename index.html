@@ -48,17 +48,31 @@
           <span class="status-dot pulsating"></span>
           <span id="lastUpdatedText">本日 07:00 自動更新完了</span>
         </div>
+        <button id="btnToggleSettings" class="btn btn-secondary btn-settings-toggle" title="配信設定・トピック管理を開く">
+          <i data-lucide="sliders"></i>
+          <span>設定</span>
+        </button>
         <button id="btnRefresh" class="btn btn-primary btn-glow" title="今すぐネットから最新イベントを検索・収集">
           <i data-lucide="refresh-cw" class="icon-refresh"></i>
-          <span>今すぐ最新情報を更新</span>
+          <span class="btn-refresh-text">今すぐ更新</span>
         </button>
       </div>
     </header>
 
     <!-- メインコンテンツ -->
     <main class="dashboard-grid">
-      <!-- サイドバー: トピック管理 & 連携コントロール -->
-      <aside class="sidebar-panel">
+      <!-- サイドバー: トピック管理 & 連携コントロール (スマホではドロワー/シート) -->
+      <aside class="sidebar-panel" id="sidebarPanel">
+        <!-- スマホ用ドロワーヘッダー -->
+        <div class="drawer-mobile-header">
+          <div class="drawer-title">
+            <i data-lucide="sliders" class="text-accent"></i>
+            <span>設定 & トピック管理</span>
+          </div>
+          <button id="btnCloseSidebar" class="btn-icon btn-sm" aria-label="閉じる">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
         
         <!-- コントロールセンター (メール・カレンダー・自動更新スイッチ) -->
         <section class="card glass-card control-center">
@@ -214,6 +228,16 @@
       <!-- メインコンテンツ: イベント一覧・検索・フィルター -->
       <section class="events-main-panel">
         
+        <!-- スマホ用クイックバー (設定開閉 ＆ トピック概要) -->
+        <div class="mobile-quick-bar">
+          <button id="btnMobileOpenSettings" class="btn btn-secondary btn-sm" title="設定・トピック管理を開く">
+            <i data-lucide="sliders" class="text-accent"></i>
+            <span>トピック追加 & 配信設定</span>
+          </button>
+          <span class="mobile-quick-summary" id="mobileActiveTopicSummary">
+            <span>すべて表示中</span>
+          </span>
+        </div>
         <!-- ツールバー（フィルタ・タブ・表示切り替え） -->
         <div class="events-toolbar card glass-card">
           <div class="toolbar-left">
