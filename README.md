@@ -6,15 +6,16 @@
 
 ## 🌟 主な機能
 
-### 1. マルチソース対応（Web / X / Instagram）
-- **Web公式サイト**: 美術館、イベンター、Peatix、Walkerplusなどの公式リリース
+### 1. トピックの自由な管理（チェックボックスで表示/非表示＆完全削除）
+- **☑️ チェックボックス切り替え**: トピックを削除しなくても、チェックを外すだけでそのトピックのイベントを**瞬時に非表示（閉じる）**にできます。
+- **× 完全削除**: 「×」ボタンを押すと、トピックとそのトピックに紐づくイベントをデータベースから完全に消去します（ページを更新しても復活しません）。
+- **新規追加**: 入力フォームからキーワードや「@公式アカウント」をいつでも追加可能。
+
+### 2. マルチソース対応（Web / X / Instagram）
+- **Web公式サイト**: 美術館、イベンター、Peatixなどの公式リリース
 - **𝕏 X (Twitter)**: 公式アカウントの告知ポスト、チケット最速先行、速報解禁情報
 - **📸 Instagram**: アート作家の個展写真、キービジュアル公開、POP-UPストア情報
 - 画面左側のスイッチで、情報ソースごとにON/OFFの切り替えが可能です。
-
-### 2. 興味のある事柄（トピック）の自由な追加・削除
-- キーワード（例: `宇宙`, `現代アート`）や公式アカウント（例: `@公式アカウント名`）を入力して追加するだけ。
-- タグの「×」ボタンを押せばいつでもワンタップで削除できます。
 
 ### 3. メール通知コントロール
 - **ON / OFF スイッチ**: メールの送信・送信なしをワンタップで切り替え。
@@ -24,28 +25,25 @@
 - **ON / OFF スイッチ**: カレンダー連携の有効化・無効化。
 - **ワンクリック登録**: 気に入ったイベントカードの「カレンダーに追加」を押すだけで、タイトル・会期・場所・詳細URLが入力された状態でGoogleカレンダーが開きます。
 
-### 5. 毎日の自動更新 ＆ 即時更新
-- 毎朝07:00の自動巡回設定。
-- 「今すぐ最新情報を更新」ボタンでいつでも手動更新可能。
+---
+
+## 📱 スマホからどこでも無料で見る方法（完全無料）
+
+本アプリケーションは、サーバー費用が一切かからない静的Webアプリ（HTML/CSS/JS）として設計されているため、**完全無料**でスマホからいつでも閲覧・操作できます。
+
+### 方法1: GitHub Pages を使う（一番おすすめ・完全無料）
+1. [GitHub](https://github.com/)（無料アカウント）にログインし、新しいリポジトリ（例: `eventpulse`）を作成します。
+2. 本フォルダのファイルをGitHubにプッシュ（アップロード）します。
+3. リポジトリの **Settings > Pages** を開き、Sourceを `main` ブランチに設定して「Save」をクリックします。
+4. 数分で **`https://<あなたのアカウント名>.github.io/eventpulse/`** という世界中からアクセスできる専用URLが発行されます！
+
+### 方法2: スマホの「ホーム画面に追加」でアプリ化（PWA対応）
+- スマホのSafari（iPhone）やChrome（Android）で上記URLを開き、**「共有」メニュー →「ホーム画面に追加」** を押すだけで、アプリアイコンがホーム画面に作成されます。
+- ブラウザのアドレスバーが消え、全画面のスマホアプリとして快適に利用できます。
 
 ---
 
-## 📱 X（Twitter）や Instagram から収集する仕組み
-
-SNSからの自動取得は、主に以下の3つの手法で実現できます：
-
-| 手法 | 概要 | 特徴・メリット |
-| :--- | :--- | :--- |
-| **1. 検索エンジンのソーシャルインデックス利用** | GoogleやBingの検索APIで `site:x.com "公式" "展示会"` や `site:instagram.com "個展"` を検索 | **無料・手軽**。公式APIの高額な利用料をかけずに最新投稿を拾える |
-| **2. 公式アカウントのRSS連携** | XやInstagramの特定アカウントの更新をRSSに変換（RSS.appなどのツール）して購読 | 新着告知があった瞬間だけピンポイントで検知可能 |
-| **3. 公式API (X API / Meta Graph API)** | Xの公式APIやMetaのGraph APIを使用して直接ツイートや投稿データを取得 | 正確なデータ取得が可能（※X APIは有料プラン推奨） |
-| **4. AIエージェント（LLM）連携** | GeminiなどのAIに「〇〇の公式SNSの最新イベント告知を調べて」と指示 | 画像内の文字情報や複雑な告知文も日本語で綺麗に整理・要約 |
-
----
-
-## 🚀 使い方（今すぐブラウザで試す）
-
-Macのターミナルで以下のコマンドを実行するか、Finderで本フォルダの [index.html](file:///Users/sin5/Documents/Antigravity-matters/index.html) をダブルクリックして開いてください。
+## 🚀 PC（Mac）で今すぐ試す方法
 
 ```bash
 open index.html
@@ -54,8 +52,9 @@ open index.html
 ---
 
 ## 📂 構成ファイル
-- [index.html](file:///Users/sin5/Documents/Antigravity-matters/index.html) : メインダッシュボード画面
-- [css/style.css](file:///Users/sin5/Documents/Antigravity-matters/css/style.css) : デザインスタイルシート（SNSバッジ・フィルター対応）
-- [js/app.js](file:///Users/sin5/Documents/Antigravity-matters/js/app.js) : トピック・SNSフィルター・カレンダー連携ロジック
+- [index.html](file:///Users/sin5/Documents/Antigravity-matters/index.html) : メインダッシュボード画面（PWA対応）
+- [manifest.json](file:///Users/sin5/Documents/Antigravity-matters/manifest.json) : スマホアプリ化（PWA）定義ファイル
+- [css/style.css](file:///Users/sin5/Documents/Antigravity-matters/css/style.css) : デザインスタイルシート（スマホ完全レスポンシブ）
+- [js/app.js](file:///Users/sin5/Documents/Antigravity-matters/js/app.js) : トピックチェックボックス、完全削除、カレンダー連携
 - [js/data.js](file:///Users/sin5/Documents/Antigravity-matters/js/data.js) : Web/X/Instagramのリアルイベントデータ
-- [crawler_service.py](file:///Users/sin5/Documents/Antigravity-matters/crawler_service.py) : バックエンド巡回スクリプト
+- [crawler_service.py](file:///Users/sin5/Documents/Antigravity-matters/crawler_service.py) : バックエンド自動巡回スクリプト
