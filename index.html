@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EventPulse (イベントパルス) - 興味のあるイベントを毎日自動収集・カレンダー連携</title>
+  <meta name="description" content="宇宙・アート・エンタメなど、あなたの興味・関心に基づいた最新イベントや展示会をネットから毎日自動収集。Googleカレンダー連携やメール通知もワンクリックで設定できるスマートダッシュボード。">
+  
+  <meta name="theme-color" content="#6366f1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="EventPulse">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%236366f1'/><text y='.9em' font-size='70' x='15'>✨</text></svg>">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-background">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+  </div>
+
+  <div class="app-container">
+    <!-- ヘッダー -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="brand-icon">
+          <i data-lucide="sparkles"></i>
+        </div>
+        <div>
+          <h1 class="brand-title">EventPulse</h1>
+          <p class="brand-subtitle">AI & Web検索で気になるイベント・展示会を自動収集</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="sync-status" id="syncStatusBadge">
+          <span class="status-dot pulsating"></span>
+          <span id="lastUpdatedText">本日 07:00 自動更新完了</span>
+        </div>
+        <button id="btnRefresh" class="btn btn-primary btn-glow" title="今すぐネットから最新イベントを検索・収集">
+          <i data-lucide="refresh-cw" class="icon-refresh"></i>
+          <span>今すぐ最新情報を更新</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="dashboard-grid">
+      <!-- サイドバー: トピック管理 & 連携コントロール -->
+      <aside class="sidebar-panel">
+        
+        <!-- コントロールセンター (メール・カレンダー・自動更新スイッチ) -->
+        <section class="card glass-card control-center">
+          <div class="card-header">
+            <div class="card-title-wrap">
+              <i data-lucide="sliders" class="text-accent"></i>
+              <h2 class="card-title">配信・連携設定</h2>
+            </div>
+            <span class="badge badge-subtle">リアルタイム反映</span>
+          </div>
+
+          <div class="settings-list">
+            <!-- メール通知トグル -->
+            <div class="setting-item">
+              <div class="setting-info">
+                <div class="setting-label-wrap">
+                  <i data-lucide="mail" class="setting-icon text-mail"></i>
+                  <span class="setting-name">メール毎朝配信</span>
+                </div>
+                <p class="setting-desc">新着イベントを毎朝まとめてメールでお届け</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="toggleEmail" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <!-- メール詳細設定（アコーディオン） -->
+            <div class="setting-subpanel" id="emailSubpanel">
+              <div class="input-group">
+                <label for="inputEmailAddress">送信先アドレス</label>
+                <input type="email" id="inputEmailAddress" value="user@example.com" placeholder="name@example.com">
+              </div>
+              <div class="button-row">
+                <button id="btnPreviewEmail" class="btn btn-secondary btn-sm">
+                  <i data-lucide="eye"></i> プレビュー・テスト送信
+                </button>
+              </div>
+            </div>
+
+            <!-- Googleカレンダー連携トグル -->
+            <div class="setting-item">
+              <div class="setting-info">
+                <div class="setting-label-wrap">
+                  <i data-lucide="calendar" class="setting-icon text-calendar"></i>
+                  <span class="setting-name">カレンダー表示・連携</span>
+                </div>
+                <p class="setting-desc">ワンクリック登録 & 予定表にハイライト表示</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="toggleCalendar" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <!-- 毎日の自動収集トグル -->
+            <div class="setting-item">
+              <div class="setting-info">
+                <div class="setting-label-wrap">
+                  <i data-lucide="bot" class="setting-icon text-bot"></i>
+                  <span class="setting-name">毎日の自動検索</span>
+                </div>
+                <p class="setting-desc">毎朝07:00に最新イベント・チケット情報を自動取得</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="toggleAutoSync" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <!-- 情報収集ソース (Web / X / Instagram) -->
+            <div class="source-channels-section">
+              <span class="source-section-title"><i data-lucide="globe"></i> 検索対象プラットフォーム</span>
+              <div class="source-chips">
+                <label class="source-chip active">
+                  <input type="checkbox" id="srcWeb" checked>
+                  <i data-lucide="globe" style="width:14px; height:14px;"></i>
+                  <span>Web公式サイト</span>
+                </label>
+                <label class="source-chip active">
+                  <input type="checkbox" id="srcX" checked>
+                  <span style="font-weight:700; font-size:12px;">𝕏</span>
+                  <span>X (Twitter)</span>
+                </label>
+                <label class="source-chip active">
+                  <input type="checkbox" id="srcInstagram" checked>
+                  <i data-lucide="instagram" style="width:14px; height:14px;"></i>
+                  <span>Instagram</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 興味のある事柄（トピック・キーワード）管理 -->
+        <section class="card glass-card topic-manager">
+          <div class="card-header">
+            <div class="card-title-wrap">
+              <i data-lucide="compass" class="text-accent"></i>
+              <h2 class="card-title">興味のある事柄 (トピック)</h2>
+            </div>
+            <span class="badge badge-accent" id="topicCountBadge">5件登録中</span>
+          </div>
+          
+          <p class="section-intro">
+            気になるテーマを追加すると、ネット上の展示会・公演・フェス情報を自動収集します。
+          </p>
+
+          <!-- トピック追加フォーム -->
+          <form id="addTopicForm" class="topic-add-form">
+            <div class="input-with-button">
+              <i data-lucide="plus" class="input-icon"></i>
+              <input 
+                type="text" 
+                id="topicInput" 
+                placeholder="新しいキーワード（例: 恐竜展, サウナ, BTS）" 
+                autocomplete="off"
+                required
+              >
+              <button type="submit" class="btn btn-accent btn-sm">追加</button>
+            </div>
+          </form>
+
+          <!-- トピック一覧タグ -->
+          <div class="topic-tags-container" id="topicTagsList">
+            <!-- JSで動的生成 -->
+          </div>
+
+          <!-- おすすめトピック候補 -->
+          <div class="suggested-topics">
+            <span class="suggest-label"><i data-lucide="zap"></i> おすすめ候補:</span>
+            <div class="suggest-chips" id="suggestChips">
+              <button type="button" class="chip" data-topic="デザイン・建築">＋ 建築・デザイン</button>
+              <button type="button" class="chip" data-topic="アニメ・ゲーム展">＋ アニメ・ゲーム展</button>
+              <button type="button" class="chip" data-topic="クラフトビール">＋ クラフトビール</button>
+              <button type="button" class="chip" data-topic="VR・XR">＋ VR・XR</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 仕組み解説バナー（ユーザー向け安心ガイド） -->
+        <section class="card glass-card guide-card">
+          <div class="guide-header">
+            <i data-lucide="info" class="text-info"></i>
+            <h3>自動化の仕組み</h3>
+          </div>
+          <p class="guide-text">
+            設定したキーワードをもとに、毎朝Web上の公式情報・チケットサイトを巡回。要約されたイベントを即座にGoogleカレンダーへ登録したり、毎朝メールで受け取ることができます。
+          </p>
+        </section>
+      </aside>
+
+      <!-- メインコンテンツ: イベント一覧・検索・フィルター -->
+      <section class="events-main-panel">
+        
+        <!-- ツールバー（フィルタ・タブ・表示切り替え） -->
+        <div class="events-toolbar card glass-card">
+          <div class="toolbar-left">
+            <div class="search-input-wrap">
+              <i data-lucide="search" class="search-icon"></i>
+              <input type="text" id="eventSearchInput" placeholder="イベント名・会場・地域で絞り込み...">
+            </div>
+
+            <div class="topic-filter-dropdown-wrap">
+              <select id="topicFilterSelect" class="styled-select">
+                <option value="ALL">すべてのトピック表示</option>
+                <!-- JSで動的生成 -->
+              </select>
+            </div>
+          </div>
+
+          <div class="toolbar-right">
+            <div class="view-toggle-group">
+              <button id="viewGridBtn" class="btn-icon active" title="グリッド表示">
+                <i data-lucide="grid"></i>
+              </button>
+              <button id="viewCalendarBtn" class="btn-icon" title="カレンダータイムライン表示">
+                <i data-lucide="calendar-days"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 状態インフォバー（メール・カレンダーON時の案内） -->
+        <div class="status-banner" id="statusBanner">
+          <div class="banner-item" id="bannerEmailStatus">
+            <i data-lucide="check-circle-2" class="text-success"></i>
+            <span>毎朝 07:00 メール配信: <strong>有効 (user@example.com)</strong></span>
+          </div>
+          <div class="banner-divider"></div>
+          <div class="banner-item" id="bannerCalendarStatus">
+            <i data-lucide="calendar-check" class="text-calendar"></i>
+            <span>Googleカレンダー連携: <strong>ワンクリック追加モード有効</strong></span>
+          </div>
+        </div>
+
+        <!-- イベントグリッド表示ビュー -->
+        <div id="eventsContainer" class="events-grid">
+          <!-- イベントカードがJSで生成される -->
+        </div>
+
+        <!-- カレンダータイムライン表示ビュー (切り替え用) -->
+        <div id="calendarViewContainer" class="calendar-timeline-view hidden">
+          <!-- カレンダータイムラインがJSで描画 -->
+        </div>
+
+        <!-- 該当なしステート -->
+        <div id="emptyState" class="empty-state hidden">
+          <div class="empty-icon">
+            <i data-lucide="inbox"></i>
+          </div>
+          <h3>該当するイベントが見つかりませんでした</h3>
+          <p>キーワードを変更するか、左のサイドバーから新しいトピックを追加してください。</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- イベント詳細モーダル -->
+  <div id="eventDetailModal" class="modal-overlay hidden">
+    <div class="modal-card glass-modal">
+      <button class="modal-close-btn" id="modalCloseBtn" aria-label="閉じる">
+        <i data-lucide="x"></i>
+      </button>
+      <div id="modalContent">
+        <!-- 動的注入 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- メールプレビュー・テスト送信モーダル -->
+  <div id="emailPreviewModal" class="modal-overlay hidden">
+    <div class="modal-card glass-modal modal-wide">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <i data-lucide="mail" class="text-mail"></i>
+          <h3>毎朝の配信メール プレビュー</h3>
+        </div>
+        <button class="modal-close-btn" id="emailModalCloseBtn" aria-label="閉じる">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="email-preview-frame">
+        <div class="email-meta-header">
+          <div><strong>送信元:</strong> EventPulse Daily Digest &lt;bot@eventpulse.ai&gt;</div>
+          <div><strong>宛先:</strong> <span id="emailPreviewTo">user@example.com</span></div>
+          <div><strong>件名:</strong> [EventPulse] 本日の気になる展示会・イベント情報 (宇宙、アート、芸能人など5件)</div>
+        </div>
+        <div class="email-body-rendered" id="emailRenderedContent">
+          <!-- メール本文プレビュー -->
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <span class="footer-tip"><i data-lucide="sparkles"></i> 毎朝07:00にこの形式で自動送信されます</span>
+        <button id="btnSendTestEmail" class="btn btn-primary">
+          <i data-lucide="send"></i> テストメールを送信
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- トースト通知 -->
+  <div id="toastNotification" class="toast hidden">
+    <i data-lucide="check-circle" class="toast-icon"></i>
+    <span id="toastMessage">完了しました</span>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
